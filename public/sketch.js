@@ -1,10 +1,10 @@
 //implementation of Conway's Game of Life
 let sizeOfCell = 100
-var spawnRate = 0.5 //Must be from 0 to 1, anything above 1 will make
+var spawnRate = 0.8 //Must be from 0 to 1, anything above 1 will make
 var game //Not used yet
 var grid
-let nCol = 30
-let nRow = 30
+let nCol = 50
+let nRow = 50
 let randomColor = false
 let fixedColor = {
     r: 0,
