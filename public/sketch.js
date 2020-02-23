@@ -8,7 +8,7 @@ let nRow = 50
 let randomColor = false
 let fixedColor = {
     r: 0,
-    g: 255,
+    g: 0,
     b: 0
 }
 
