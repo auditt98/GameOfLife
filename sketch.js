@@ -7,9 +7,9 @@ let nCol = 30
 let nRow = 30
 let randomColor = false
 let fixedColor = {
-    r: 0,
-    g: 0,
-    b: 0
+    r: 10,
+    g: 10,
+    b: 10
 }
 
 function setup() {
