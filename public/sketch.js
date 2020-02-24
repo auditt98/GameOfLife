@@ -1,7 +1,7 @@
 //implementation of Conway's Game of Life
 let sizeOfCell
 var spawnRate = 0 //Must be from 0 to 1, anything above 1 will make
-let game //Not used yet
+let game
 let grid
 let nCol = 40 // 10, 20, 40, 80, 100, 200, 400
 let fps = 10
@@ -54,11 +54,13 @@ function pause(){
 }
 
 function reset(){
+    game.generation = 0
     for(let col = 0; col < nCol; col++){
         for(let row = 0; row < nCol; row++){
             grid.cells[col][row].state = false
         }
     }
+    pause()
 }
 
 function cClicked() {
@@ -75,7 +77,15 @@ function cClicked() {
 
 class Game{
     constructor(){
-        this.state = 0 //0 pause 1 pause
+        this.state = 0, //0 pause 1 pause
+        this.generation = 0
+    }
+
+    updateGeneration(){
+        if(this.state == 1){
+            this.generation++
+        }
+        document.getElementById('gen').innerText = 'Generations: ' + this.generation
     }
 }
 
@@ -97,32 +107,35 @@ class Grid{
     }
 
     draw(){
+        game.updateGeneration()
         for(let col = 0; col < this.numOfCols; col++){
             for(let row = 0; row < this.numOfRows; row++){
-                this.cells[col][row].draw()
+                    this.cells[col][row].draw()
             }
         }
-        this.updateNeighbour()
-        if(game.state == 1){
-            this.updateCellState()
+            this.updateNeighbour()
+            if(game.state == 1){
+                this.updateCellState()
+            }
         }
-    }
 
-    updateNeighbour(){
-        for(let col = 0; col < this.numOfCols; col++){
-            for(let row = 0; row < this.numOfRows; row++){
-                this.cells[col][row].getNeighbours()
+        updateNeighbour(){
+            for(let col = 0; col < this.numOfCols; col++){
+                for(let row = 0; row < this.numOfRows; row++){
+                    this.cells[col][row].getNeighbours()
+                }
             }
         }
-    }
 
-    updateCellState(){
-        for(let col = 0; col < this.numOfCols; col++){
-            for(let row = 0; row < this.numOfRows; row++){
-                this.cells[col][row].updateCellState()
+        updateCellState(){
+            for(let col = 0; col < this.numOfCols; col++){
+                for(let row = 0; row < this.numOfRows; row++){
+                    this.cells[col][row].updateCellState()
+                }
             }
         }
-    }
+
+
 }
 
 class Cell{
@@ -210,6 +223,7 @@ class Cell{
         if(game.state == 1){
             // this.updateCellState()
         }
+       
 
         rect(this.col * sizeOfCell, this.row * sizeOfCell, sizeOfCell, sizeOfCell)
     }
