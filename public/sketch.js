@@ -3,7 +3,7 @@ let sizeOfCell
 var spawnRate = 0 //Must be from 0 to 1, anything above 1 will make
 let game
 let grid
-let nCol = 40 // 10, 20, 40, 80, 100, 200, 400
+let nCol = 70 // 10, 20, 40, 80, 100, 200, 400
 let fps = 10
 
 let randomColor = false
@@ -19,7 +19,7 @@ function setup() {
     game = new Game()
     frameRate(fps);
     // createCanvas(windowWidth, windowHeight)
-    let canvas = createCanvas(500, 500)
+    let canvas = createCanvas(700, 700)
     sizeOfCell = Math.floor(width/nCol)
     print(sizeOfCell)
     // let canvas = createCanvas(1000, 1000)
