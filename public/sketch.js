@@ -19,7 +19,7 @@ function setup() {
     game = new Game()
     frameRate(fps);
     // createCanvas(windowWidth, windowHeight)
-    let canvas = createCanvas(800, 800)
+    let canvas = createCanvas(500, 500)
     sizeOfCell = Math.floor(width/nCol)
     print(sizeOfCell)
     // let canvas = createCanvas(1000, 1000)
