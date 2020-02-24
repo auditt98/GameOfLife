@@ -1,0 +1,19 @@
+.panel{
+    /* height: 100%;
+    width: 80px; */
+    display: inline-block;
+
+    text-align: left;
+}
+
+html, body {
+
+}
+
+body {
+    overflow: hidden;
+    width: 100%;
+    display: inline-block;
+    flex-direction: column
+  
+}

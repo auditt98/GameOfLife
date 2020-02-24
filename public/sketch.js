@@ -1,10 +1,11 @@
 //implementation of Conway's Game of Life
-let sizeOfCell = 100
-var spawnRate = 0.8 //Must be from 0 to 1, anything above 1 will make
-var game //Not used yet
-var grid
-let nCol = 50
-let nRow = 50
+let sizeOfCell
+var spawnRate = 0 //Must be from 0 to 1, anything above 1 will make
+let game //Not used yet
+let grid
+let nCol = 40 // 10, 20, 40, 80, 100, 200, 400
+let fps = 10
+
 let randomColor = false
 let fixedColor = {
     r: 0,
@@ -12,11 +13,18 @@ let fixedColor = {
     b: 0
 }
 
-function setup() {
+//Canvas size / numCol(or row) -> width of each col 
 
+function setup() {
+    game = new Game()
+    frameRate(fps);
     // createCanvas(windowWidth, windowHeight)
-    createCanvas(nCol * sizeOfCell, nRow * sizeOfCell)
+    let canvas = createCanvas(800, 800)
+    sizeOfCell = Math.floor(width/nCol)
+    print(sizeOfCell)
+    // let canvas = createCanvas(1000, 1000)
     grid = new Grid()
+    canvas.mousePressed(cMousePressed)
 }
 
 function draw() {
@@ -24,9 +32,56 @@ function draw() {
     grid.draw()
 }
 
+function cMousePressed(){
+    // print(mouseX + ', ' + mouseY)
+    // calculate column and row of clicked position
+    var rect = canvas.getBoundingClientRect();
+    var trueX = Math.floor((mouseX + window.pageXOffset) / sizeOfCell);
+    var trueY = Math.floor((mouseY + window.pageYOffset + Math.floor(window.height - rect.bottom) + 8 ) / sizeOfCell);
+    // let clickedCol = floor(mouseX/width * 10) 
+    // let clickedRow = floor(mouseY/height * 10) 
+    if(trueX <= nCol - 1 && trueY <= nCol - 1){
+        grid.cells[trueX][trueY].state = 1
+    }
+}
+
+function start(){
+    game.state = 1
+}
+
+function pause(){
+    game.state = 0
+}
+
+function reset(){
+    for(let col = 0; col < nCol; col++){
+        for(let row = 0; row < nCol; row++){
+            grid.cells[col][row].state = false
+        }
+    }
+}
+
+function cClicked() {
+    // var rect = canvas.getBoundingClientRect();
+    // var left = Math.floor(rect.left + window.pageXOffset);
+    // var top = Math.floor(rect.top + window.pageYOffset);
+    // var cellSize = canvas.cellSize;
+    // var clickEvent = {};
+    // clickEvent.cellX = Math.floor((evt.clientX - left + window.pageXOffset) / cellSize);
+    // clickEvent.cellY = Math.floor((evt.clientY - top + window.pageYOffset - 5) / cellSize); // TODO: Where's offset coming from?
+    // fn(clickEvent);
+
+}
+
+class Game{
+    constructor(){
+        this.state = 0 //0 pause 1 pause
+    }
+}
+
 class Grid{
     constructor(){
-        this.numOfRows= Math.floor(height/sizeOfCell)
+        this.numOfRows= Math.floor(width/sizeOfCell)
         this.numOfCols = Math.floor(width/sizeOfCell)
         this.cells = new Array(this.numOfCols)
         for(let i = 0; i < this.numOfCols; i++){
@@ -42,10 +97,29 @@ class Grid{
     }
 
     draw(){
-        //invoke cell.draw() on every single cell
         for(let col = 0; col < this.numOfCols; col++){
             for(let row = 0; row < this.numOfRows; row++){
                 this.cells[col][row].draw()
+            }
+        }
+        this.updateNeighbour()
+        if(game.state == 1){
+            this.updateCellState()
+        }
+    }
+
+    updateNeighbour(){
+        for(let col = 0; col < this.numOfCols; col++){
+            for(let row = 0; row < this.numOfRows; row++){
+                this.cells[col][row].getNeighbours()
+            }
+        }
+    }
+
+    updateCellState(){
+        for(let col = 0; col < this.numOfCols; col++){
+            for(let row = 0; row < this.numOfRows; row++){
+                this.cells[col][row].updateCellState()
             }
         }
     }
@@ -62,6 +136,7 @@ class Cell{
         this.color = this.setColor()
         
     }
+
     setColor(){
         //get a random color for a cell
         if(randomColor == true){
@@ -103,6 +178,7 @@ class Cell{
         else{
             this.state = false
         }
+        
     }
 
     getNeighbours(){
@@ -111,7 +187,7 @@ class Cell{
         this.neighbourCount = 0
         for(let c = this.col - 1; c <= this.col + 1; c++){
             for(let r = this.row - 1; r <= this.row + 1; r++){
-                if(c >= 0 && c <= nCol - 1 && r >= 0 && r <= nRow - 1 && (this.row != r || this.col != c )){
+                if(c >= 0 && c <= nCol - 1 && r >= 0 && r <= nCol - 1 && (this.row != r || this.col != c )){ //nCol == nRow
                     if(grid.cells[c][r].state == true){
                         this.neighbourCount++
                     }
@@ -120,23 +196,22 @@ class Cell{
         }
     }
 
-
     draw(){
         // performance is super, super bad, can't handle grid larger than 100x100 well
-        this.updateCellState()
-        this.getNeighbours()
+        // this.getNeighbours()
         if(!this.state){
             noFill()
             stroke(1)
-            strokeWeight(6)
+            strokeWeight(1)
         } else{
             noStroke()
             fill(this.color.r, this.color.g, this.color.b)
         }
-        rect(this.col * sizeOfCell + 2, this.row * sizeOfCell + 2, sizeOfCell, sizeOfCell)
-        // print('drawing')
-        // textSize(20)
-        // text(this.col + ', ' + this.row + ', ' + (this.state == true?1:0) + ', ' + this.neighbourCount, this.col * sizeOfCell + 2, this.row * sizeOfCell + sizeOfCell - 10)
+        if(game.state == 1){
+            // this.updateCellState()
+        }
+
+        rect(this.col * sizeOfCell, this.row * sizeOfCell, sizeOfCell, sizeOfCell)
     }
 
 }
