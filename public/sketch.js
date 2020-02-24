@@ -3,7 +3,7 @@ let sizeOfCell
 var spawnRate = 0 //Must be from 0 to 1, anything above 1 will make
 let game
 let grid
-let nCol = 70 // 10, 20, 40, 80, 100, 200, 400
+let nCol = 35 // 10, 20, 40, 80, 100, 200, 400
 let fps = 10
 
 let randomColor = false
