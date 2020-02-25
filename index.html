@@ -2,25 +2,57 @@
   <head>
     <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
     <script src="sketch.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
     <link rel="stylesheet" href="index.css">
+    <script src="jscolor.js"></script>
   </head>
   <body>
-    <div class='panel'>
-
-      <button onclick="start()">Start</button>
-      <button onclick="pause()">Pause</button>
-      <button onclick="reset()">Reset</button>
-      <h3 id="gen"></h3>
+    <div>
+      <div class='panel'>
+        <h2>An implementation of</h2>
+        <h2>Conway's Game of Life</h2>
+        <button id="startButton" class="pure-button" onclick="game.setGameState(1)">Bắt đầu/Tiếp tục</button>
+        <button id="pauseButton" class="pure-button" onclick="game.setGameState(0)">Dừng</button>
+        <button class="pure-button" onclick="game.resetGameState()">Khởi động lại</button>
+        <h3 id="gen"></h3>
+        <div class="speed" style="display: block;">
+          <p style="margin: 0; padding: 0;">Speed: </p>
+          <input class='pure-form' type="number" id="speedInput" placeholder="Speed" style="width: 100px;" required>
+          <button class="pure-button" onclick="changeSpeed()">Change speed</button>
+          <button class="pure-button" onclick="resetSpeed()">Reset speed</button>
+          <p style="margin: 0; padding: 0; font-size: smaller;">Lưu ý: Tốc độ quá chậm sẽ làm giảm độ phản hồi ô vuông</p>
+        </div>
+        <div>
+          <span>Ô có dân màu ngẫu nhiên: </span>
+          <input type="checkbox" id="isRandomColor" onclick="updateRandomColor()">
+        </div>
+        <p style="font-size: small; color: red;">Cẩn thận màu nhấp nháy, nếu cảm thấy khó chịu cần tắt ngay!!!</p>
+  
+        <div style="float: left">
+          <p>Chọn màu ô có dân: </p>
+          <button id="populatedColor" class="pure-button border-1 jscolor {value:'000000', onFineChange: 'updatePopulatedColor(this)'}"></button>
+        </div>
+  
+        <div style="float: right;">
+          <p>Chọn màu ô không dân: </p>
+          <button id="unpopulatedColor" class="pure-button border-1 jscolor {value:'ffffff', onFineChange: 'updateUnpopulatedColor(this)'}"></button>
+        </div>
+  
+      </div>
+    </div>
+    
+    <div class="rules">
       <h2 style="display: block;">Luật của game:</h2>
       <p>Mỗi ô trong game có 2 trạng thái</p>
-      <p>Sống hoặc chết (Sống màu đen, chết màu trắng)</p>
-      <h3>Với mỗi ô sống:</h3>
+      <p>Có dân hoặc không dân</p>
+      <h3>Với mỗi ô có dân:</h3>
       <p>Nếu 8 ô bọc xung quanh nó chứa: </p>
-      <p>Ít hơn 2 ô sống, thì nó chết (quá thưa dân)</p>
-      <p>2 hoặc 3 ô sống, thì nó sống</p>
-      <p>Nhiều hơn 3 ô sống, thì nó chết(quá đông dân)</p>
+      <p>Dưới 2 ô có dân thì ô đó chết do dân số suy giảm</p>
+      <p>2 hoặc 3 ô có dân thì ô đó sống do dân số ổn định</p>
+      <p>Nhiều hơn 3 ô có dân thì ô đó chết do quá đông dân</p>
       <h3>Với mỗi ô chết:</h3>
-      <p>Nếu xung quanh nó có 3 ô sống, nó sống (sinh đẻ)</p>
+      <p>Nếu 8 ô bọc xung quanh nó chứa: </p>
+      <p>Đúng 3 ô sống, thì ô đó sẽ sống (do sinh đẻ)</p>
     </div>
   </body>
 </html>
